@@ -1,7 +1,7 @@
 'use server'
 
 import {currentUser} from '@clerk/nextjs/server'
-import { client } from '@/lib/prisma'
+import { prisma } from '../lib/prisma'
 
 
 export const onAuthenticateUser = async () => {
@@ -11,7 +11,7 @@ export const onAuthenticateUser = async () => {
         return { status: 403 }
       }
   
-      const userExist = await client.user.findUnique({
+      const userExist = await prisma.user.findUnique({
         where: {
           clerkid: user.id,
         },
@@ -29,7 +29,7 @@ export const onAuthenticateUser = async () => {
         return { status: 200, user: userExist }
       }
       
-      const newUser = await client.user.create({
+      const newUser = await prisma.user.create({
         data: {
           clerkid: user.id,
           email: user.emailAddresses[0].emailAddress,
